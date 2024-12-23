@@ -14,19 +14,12 @@ library(reshape2)
 library(tidyr)
 
 
-##################################
-#abundances in unsorted scRNAseq
-
-scRNAseq_abund <- read.csv("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/unsorted_scRNAseq_celltype_proportions.csv", row.names = 1 )
-
-##################################
-
 bulk.count_attributes = readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/gene_summarized_experiment.RDS")
 # calculate those on cluster
 
-theta <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/onlylevel2V2swap/theta.rds")
-theta.cv <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/onlylevel2V2swap/theta.cv.rds")
-output_dir <- "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/onlylevel2V2swap"
+theta <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers/theta.rds")
+theta.cv <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers/theta.cv.rds")
+output_dir <- "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers"
 ############################
 
 # Abundances
@@ -48,7 +41,7 @@ samples.rm = unique(c(samples.rm.pca, samples.rm.perc_mapped, samples.rm.pct_dup
 
 
 
-df.abund = reshape2::melt(data.frame(sample_id = rownames(theta), theta), id.vars = c("sample_id"), variable.name = "cell_type") %>%
+df.abund = reshape2::melt(data.frame(sample_id = rownames(theta), theta, check.names=FALSE), id.vars = c("sample_id"), variable.name = "cell_type") %>%
   group_by(cell_type) %>%
   mutate(mean_prop = mean(value)) %>%
   arrange(mean_prop) %>%
@@ -63,34 +56,6 @@ theta <- subset(theta, !rownames(theta) %in% samples.rm)
 # Apply CLR
 
 df.abund$clr_value <- as.numeric(clr(df.abund$value))
-
-
-#abundances:
-result <- df.abund %>%
-  select(cell_type, mean_prop) %>%
-  distinct()
-
-# View the resulting table
-print(result)
-
-
-# Plotting the CLR transformed data
-ggplot(df.abund, aes(y = cell_type, x = clr_value)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0))
-ggsave(file.path(output_dir, "abundance_CLR.png"), height = 8, width = 8, scale = 1)
-
-
-ggplot(df.abund, aes(y = cell_type, x = value)) +
-  geom_boxplot() +
-  theme_bw() + 
-  labs(x = "Proportion", y = "", fill = "Group") +
-  scale_x_continuous(labels = scales::percent, expand = expansion(c(0, 0.05), 0))
-
-ggsave(file.path(output_dir, "abundance.png"), height = 8, width = 8, scale = 1)
-
 
 # stratified abundances
 
@@ -119,56 +84,20 @@ ggplot(df.abund, aes(y = cell_type, x = value, fill = is_diseased)) +
   labs(x = "Proportion", y = "", fill = "Group") +
   scale_x_continuous(labels = scales::percent, expand = expansion(c(0, 0.05), 0)) +
   scale_fill_manual(values = c("Non-Diseased" = "blue", "Diseased" = "red"),
-                    labels = c("Non-Diseased" = "Early Lesion", "Diseased" = "Late Lesion"))
-ggsave(file.path(output_dir, "abundance_disease.pdf"), height = 8, width = 8, scale = 1, device = pdf)
+                    labels = c("Non-Diseased" = "Early Lesion", "Diseased" = "Late Lesion"))+
+  theme(
+    axis.title.x = element_text(size = 16), # X-axis title font size
+    axis.text.x = element_text(size = 14),  # X-axis text font size
+    axis.text.y = element_text(size = 14),  # Y-axis text font size
+    legend.title = element_text(size = 16), # Legend title font size
+    legend.text = element_text(size = 14)   # Legend text font size
+  )
 
 
-ggplot(df.abund, aes(y = cell_type, x = value, fill = Symptomatic)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "Proportion", y = "", fill = "Group") +
-  scale_x_continuous(labels = scales::percent, expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Asymptomatic" = "green", "Symptomatic" = "orange"))
-ggsave(file.path(output_dir, "abundance_symptomatic.png"), height = 8, width = 8, scale = 1)
-
-
-ggplot(subset(df.abund, !is.na(is_stable)), aes(y = cell_type, x = value, fill = is_stable)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "Proportion", y = "", fill = "Group") +
-  scale_x_continuous(labels = scales::percent, expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Unstable" = "purple", "Stable" = "yellow"))
-ggsave(file.path(output_dir, "abundance_stable.png"), height = 8, width = 8, scale = 1)
+ggsave(file.path(output_dir, "abundance_disease2.pdf"), height = 8, width = 8, scale = 1, device = pdf)
 
 
 # WITH CLR
-ggplot(df.abund, aes(y = cell_type, x = clr_value, fill = is_diseased)) +
-  geom_boxplot() +
-  theme_bw() + 
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Non-Diseased" = "blue", "Diseased" = "red"))
-ggsave(file.path(output_dir, "abundance_disease_CLR.png"), height = 8, width = 8, scale = 1)
-
-
-ggplot(df.abund, aes(y = cell_type, x = clr_value, fill = Symptomatic)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Asymptomatic" = "green", "Symptomatic" = "orange"))
-ggsave(file.path(output_dir, "abundance_symptomatic_CLR.png"), height = 8, width = 8, scale = 1)
-
-
-ggplot(subset(df.abund, !is.na(is_stable)), aes(y = cell_type, x = clr_value, fill = is_stable)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Unstable" = "purple", "Stable" = "yellow"))
-ggsave(file.path(output_dir, "abundance_stable_CLR.png"), height = 8, width = 8, scale = 1)
-
-
 
 #with pvals diseased
 p <- ggplot(df.abund, aes(y = cell_type, x = clr_value, fill = is_diseased)) +
@@ -177,7 +106,14 @@ p <- ggplot(df.abund, aes(y = cell_type, x = clr_value, fill = is_diseased)) +
   labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
   scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
   scale_fill_manual(values = c("Non-Diseased" = "blue", "Diseased" = "red"),
-                    labels = c("Non-Diseased" = "Early Lesion", "Diseased" = "Late Lesion"))
+                    labels = c("Non-Diseased" = "Early Lesion", "Diseased" = "Late Lesion")) +
+  theme(
+    axis.title.x = element_text(size = 16), # X-axis title font size
+    axis.text.x = element_text(size = 14),  # X-axis text font size
+    axis.text.y = element_text(size = 14),  # Y-axis text font size
+    legend.title = element_text(size = 16), # Legend title font size
+    legend.text = element_text(size = 14)   # Legend text font size
+  )
 
 # Determine the rightmost position for the text, adding extra space for the labels
 max_value <- max(df.abund$clr_value, na.rm = TRUE)
@@ -197,64 +133,4 @@ p <- p + theme(plot.margin = margin(r = 2, unit = "pt")) # Adjust the right marg
 p_final <- p + geom_text(data = p_values, aes(y = cell_type, x = label_position, label = label), hjust = 1, vjust = 0, inherit.aes = FALSE)
 print(p_final)
 
-ggsave(file.path(output_dir, "abundance_disease_CLR_pvals_level2.pdf"), plot=p_final,height = 8, width = 10, scale = 1, device=pdf)
-
-
-# with pvals stable
-
-p <- ggplot(subset(df.abund, !is.na(is_stable)), aes(y = cell_type, x = clr_value, fill = is_stable)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Stable" = "blue", "Unstable" = "red"))
-
-print(p)
-
-# Determine the rightmost position for the text, adding extra space for the labels
-max_value <- max(df.abund$clr_value, na.rm = TRUE)
-label_position <- max_value + (max_value * 0.25) # Adjust the multiplier as needed for spacing
-
-# Calculate p-values
-p_values <- df.abund %>%
-  group_by(cell_type) %>%
-  summarise(p_value = t.test(clr_value ~ is_stable)$p.value) %>%
-  mutate(label = ifelse(p_value < 0.05, paste0("p = ", format(p_value, digits = 2)), "ns"))
-
-# Adjust plot margins to make space for the p-value labels
-p <- p + theme(plot.margin = margin(r = 2, unit = "pt")) # Adjust the right margin as needed
-
-print(p)
-
-# Add the p-values to the plot, positioning them at the calculated label_position
-p_final <- p + geom_text(data = p_values, aes(y = cell_type, x = label_position, label = label), hjust = 1, vjust = 0, inherit.aes = FALSE)
-print(p_final)
-ggsave(file.path(output_dir, "abundance_stable_CLR_pvals.png"), plot=p_final,height = 8, width = 10, scale = 1)
-
-
-# with pvals symptoms
-
-p <- ggplot(df.abund, aes(y = cell_type, x = clr_value, fill = Symptomatic)) +
-  geom_boxplot() +
-  theme_bw() +
-  labs(x = "CLR Transformed Proportion", y = "", fill = "Group") +
-  scale_x_continuous(expand = expansion(c(0, 0.05), 0)) +
-  scale_fill_manual(values = c("Asymptomatic" = "blue", "Symptomatic" = "red"))
-
-# Determine the rightmost position for the text, adding extra space for the labels
-max_value <- max(df.abund$clr_value, na.rm = TRUE)
-label_position <- max_value + (max_value * 0.25) # Adjust the multiplier as needed for spacing
-
-# Calculate p-values
-p_values <- df.abund %>%
-  group_by(cell_type) %>%
-  summarise(p_value = t.test(clr_value ~ Symptomatic)$p.value) %>%
-  mutate(label = ifelse(p_value < 0.05, paste0("p = ", format(p_value, digits = 2)), "ns"))
-
-# Adjust plot margins to make space for the p-value labels
-p <- p + theme(plot.margin = margin(r = 2, unit = "pt")) # Adjust the right margin as needed
-
-# Add the p-values to the plot, positioning them at the calculated label_position
-p_final <- p + geom_text(data = p_values, aes(y = cell_type, x = label_position, label = label), hjust = 1, vjust = 0, inherit.aes = FALSE)
-print(p_final)
-ggsave(file.path(output_dir, "abundance_symptomatic_CLR_pvals.png"), plot=p_final,height = 8, width = 10, scale = 1)
+ggsave(file.path(output_dir, "abundance_disease_CLR_pvals_level22.pdf"), plot=p_final,height = 8, width = 12, scale = 1, device=pdf)

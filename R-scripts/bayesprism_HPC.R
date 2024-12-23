@@ -11,7 +11,7 @@ library(zellkonverter)
 
 
 setwd("/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/bulk")
-output_dir = "cell_type_deconvolution/lars/sign/onlylevel2V3"; dir.create(file.path(output_dir), showWarnings = FALSE)
+output_dir = "cell_type_deconvolution/lars/sign/BigwithBashoreV1_level12_newDibothers"; dir.create(file.path(output_dir), showWarnings = FALSE)
 
 
 ###########################################################
@@ -21,12 +21,7 @@ output_dir = "cell_type_deconvolution/lars/sign/onlylevel2V3"; dir.create(file.p
 print("Reading in scdata...")
 # Rows: genes (ENSGID remove versioning with stringr::str_replace(colnames(bulk.count_matrix), "\\.[0-9]+", ""))
 # Column: cells
-#sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected.h5ad')
-#sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected-V2.h5ad') # with new EC subtypes
-#sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected-V2-swap.h5ad') # with swapped EC subtypes
-#sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected-V2-swap-carotid.h5ad') # with swapped EC subtypes only carotid
-#sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected-V3.h5ad') # V2 but with new SMC subtypes
-sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Altas_level2-noprototypes-allgenes-names-mse3-reload-Bayes-uncorrected-V3-miller-ECswap.h5ad') # v2-swap but with new SMC subtypes from C. Miller and modSMC from jessica
+sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Big-atlas-uncorrected_counts-nootherlayers-corrected2-ensembleYES-noCITE-withlevel2-newDib+other.h5ad') # uncorrected counts new atlas based on level 1 with with bashore and lars/jessica + NEW DIB macrophages without c1q level 2 cell types: sign BigwithBashoreV1-newDibothers
 
 
 original_colData <- colData(sc.count_matrix)

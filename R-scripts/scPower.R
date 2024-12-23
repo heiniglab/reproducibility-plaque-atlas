@@ -14,8 +14,8 @@ library(zellkonverter)
 # ------------------------------------------------Grid calcs Power-----------------------------------------------------------------------------------------
 
 
-gamma.linear.fit.new <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/scPower/all_gamma_linear_fits.rds")
-disp.fun.general.new <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/scPower/all_disp_fun_general.rds")
+gamma.linear.fit.new <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/scPower/corrected2/all_gamma_linear_fits.rds")
+disp.fun.general.new <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/scPower/corrected2/all_disp_fun_general.rds")
 
 
 # pilot data
@@ -27,97 +27,124 @@ read.umis <- data.frame(
 read.umi.fit.new<-umi.read.relation(read.umis)
 
 
-cell_types = c("T cell", "Macrophage", "EC", "SMC", "Fibromyocyte", "NK", "Fibroblast", "Monocyte", "Plasma cell", "Mast cell", "B cell", "DC")
-frequencies = c(0.253521,0.169797,0.161189,0.121283,0.113459,0.047731,0.039906,0.035994,0.019562,0.017997,0.010172,0.009390) 
-ct_vector <- setNames(frequencies, cell_types)
-genesNr <- c(10, 20, 50)
-FoldChanges <- c(1.1,1.5,2)
 
-# Define an empty dataframe with specified column names
+cell_types = c("T cell", "Macrophage", "EC", "Smooth Muscle Cell", "Fibromyocyte", "NK cell", "Fibroblast", "Monocyte", "Plasma cell", "Mast cell", "B cell", "Dendritic cell", "Neutrophil")
+frequencies = c(0.245075, 0.151300, 0.162333, 0.163909, 0.059102, 0.054374, 0.053586, 0.041765, 0.019701, 0.015760, 0.010244, 0.014184, 0.008668)
+ct_vector <- setNames(frequencies, cell_types)
+#genesNr <- c(100, 1000, 5000)
+FoldChanges <- c(1.1,1.5,2.5)
+
+# Read in ranks with cell_type and pathway info
+ranks_all = read.csv("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/big-atlas/scPower/corrected2/all_gene_ranks6.csv")
+
+ranks_all <- ranks_all[!(ranks_all$pathway %in% c("Neovascularization and angiogenesis", "CCL21")), ]
+#ranks_all$pathway[ranks_all$pathway == "Toll like receptor pathway"] <- "TLR signaling pathway"
+
+# Identify the unique pathways in the ranks_all data
+pathways <- unique(ranks_all$pathway)
+
+# Prepare results dataframe
 resultsDF <- data.frame(
   Celltype = character(0),
-  `Number of Genes` = integer(0),
-  `Mean Fold Change` = integer(0),
-  `power` = numeric(0)
+  `Mean Fold Change` = numeric(0),
+  power = numeric(0),
+  pathway = character(0)
 )
 
-
-for (ctName in names(ct_vector)){
-  print(ctName)
-  # ctName already iter
+for (ctName in names(ct_vector)) {
+  # Frequency for current cell type
   ctFreq <- ct_vector[ctName]
-  for (numGenes in genesNr){
-    for (FCmean in FoldChanges){
-      #Uniform distributed gene ranks for 100 genes in the interval from 1-2,000
-      ranks<-uniform.ranks.interval(start=1,end=numGenes,numGenes=20) 
-      #Simulation of fold changes 
-      foldChange<-effectSize.DE.simulation(mean=FCmean,sd=0.5,numGenes=20)
-      simulated.de.genes<-data.frame(ranks=ranks, FoldChange=foldChange, name="Simulated")
+  
+  # Loop through each pathway scenario
+  for (path in pathways) {
+    # Filter ranks for current cell type and pathway
+    gene_set <- ranks_all %>% 
+      filter(cell_type == ctName, pathway == path)
+    
+    if (nrow(gene_set) == 0) {
+      next  # If no genes for this combination, skip
+    }
+    
+    # Extract the ranks from the filtered gene set
+    ranks <- gene_set$rank
+    
+    # For each fold change scenario
+    for (FCmean in FoldChanges) {
+      # Simulate fold changes for all genes in the scenario
+      numGenes <- length(ranks)
+      foldChange <- effectSize.DE.simulation(mean = FCmean, sd = 0.5, numGenes = numGenes)
       
-      power<-power.general.withDoublets(nSamples=22,
-                                        nCells=200,
-                                        readDepth=334015, 
-                                        ct.freq=ctFreq,
-                                        nGenes = 29000,
-                                        type="de",
-                                        ref.study=simulated.de.genes, 
-                                        ref.study.name="Simulated", 
-                                        samplesPerLane=1,
-                                        read.umi.fit = read.umi.fit.new,
-                                        gamma.mixed.fits = gamma.linear.fit.new, 
-                                        ct=ctName, 
-                                        disp.fun.param=disp.fun.general.new, 
-                                        mappingEfficiency = 0.43,
-                                        min.UMI.counts = 3,
-                                        perc.indiv.expr = 0.5,
-                                        sign.threshold = 0.05,
-                                        MTmethod="FDR")
+      simulated.de.genes <- data.frame(ranks = ranks, FoldChange = foldChange, name = "Simulated")
+      
+      power <- power.general.withDoublets(
+        nSamples = 22,
+        nCells = 200,
+        readDepth = 334015,
+        ct.freq = ctFreq,
+        nGenes = 29000,
+        type = "de",
+        ref.study = simulated.de.genes,
+        ref.study.name = "Simulated",
+        samplesPerLane = 1,
+        read.umi.fit = read.umi.fit.new,
+        gamma.mixed.fits = gamma.linear.fit.new,
+        ct = ctName,
+        disp.fun.param = disp.fun.general.new,
+        mappingEfficiency = 0.43,
+        min.UMI.counts = 3,
+        perc.indiv.expr = 0.5,
+        sign.threshold = 0.05,
+        MTmethod = "FDR"
+      )
+      
       resultpower <- power$power
       
-      #results <- c(ctName, numGenes, FCmean, resultpower)
-      new_row <- data.frame(ctName, numGenes, FCmean, resultpower)
-      colnames(new_row) <- names(resultsDF)
+      new_row <- data.frame(
+        Celltype = ctName,
+        `Mean Fold Change` = FCmean,
+        power = resultpower,
+        pathway = path
+      )
+      
       resultsDF <- rbind(resultsDF, new_row)
     }
   }
 }
 
-
-# Ensure that each cell type in resultsDF has the correct frequency value from ct_vector
+# Add Frequency column
 resultsDF$Frequency <- ct_vector[as.character(resultsDF$Celltype)]
 
-
-
+# Aggregate by cell type to get Frequency for plotting
 aggDF <- resultsDF %>%
   group_by(Celltype) %>%
   summarise(Frequency = dplyr::first(Frequency))
 
-
-
-
-rotate_x <- theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+rotate_x <- theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 theme_set(theme_bw())
 
 ct_order <- order(ct_vector)
-resultsDF$Celltype <- factor(resultsDF$Celltype, levels=names(ct_vector)[rev(ct_order)])
+resultsDF$Celltype <- factor(resultsDF$Celltype, levels = names(ct_vector)[rev(ct_order)])
 
+mat <- ggplot(data = resultsDF, aes(x = Celltype, y = power)) + 
+  geom_point(aes(col = factor(`Mean.Fold.Change`))) + 
+  geom_col(data = aggDF, aes(x = Celltype, y = Frequency), fill = "gray", 
+           show.legend = FALSE, alpha = 0.5) +
+  facet_grid(. ~ pathway) +
+  scale_y_continuous(limits = c(0, 1),sec.axis = sec_axis(~., name = "Frequency")) +
+  rotate_x +
+  labs(col = "Fold Change")
 
-mat <- ggplot(data=resultsDF, aes(x=Celltype, y=power)) + 
-  geom_point(aes(col=factor(Mean.Fold.Change))) + 
-  geom_col(data = aggDF, aes(x = Celltype, y = Frequency), fill = "gray", show.legend = FALSE, alpha = 0.5) +
-  facet_grid(.~Number.of.Genes, labeller = labeller(Number.of.Genes = function(x) paste("Expression rank <", x))) +
-  scale_y_continuous(sec.axis = sec_axis(~., name = "Frequency")) +
-  rotate_x + 
-  labs(col="Fold Change")
 print(mat)
 
-ggsave(filename = "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/figures/scPower/big-atlas/matthiasplots_generanks.pdf", 
-       plot = mat, 
-       width = 7, 
-       height = 4, 
-       device = pdf)
+ggsave(
+  filename = "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/manuscript/revision1/corrected2/matthiasplots_RemodelAndIFN-yAndCCL19.pdf",
+  plot = mat,
+  width = 10,
+  height = 6,
+  device = pdf
+)
 
-write.csv(resultsDF, "resultsDF_new.csv", row.names = FALSE)
+write.csv(resultsDF, "resultsDF_newIFN.csv", row.names = FALSE)
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------
