@@ -32,7 +32,7 @@ Some of the scripts have a "HPC" suffix, which means that this script requires s
 
 preprint: https://www.biorxiv.org/content/10.1101/2024.09.11.612431v1 \
 \
-The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. \
+The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. (is currently being updated to the new atlas version) \
 \
 Repo for automatic cell type annotation: https://github.com/kotr98/plaque-atlas-mapping
 
