@@ -7,11 +7,11 @@ print("Jax GPU:", jax.devices() )
 
 # ## Evaluation
 
-adata = sc.read_h5ad("/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/scarches-noroche-mse.h5ad")
+adata = sc.read_h5ad("/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/scarches-noroche-issue.h5ad")
 
 print("Starting evaluations...")
 
-embedding_obsm_keys_list = ['PCA', 'scVI', 'scANVI', "scGen",'scPoli','Harmony', 'LIGER']
+embedding_obsm_keys_list = ['PCA', 'scVI', 'scANVI', "scGen",'scPoli','scPoli_nb','Harmony', 'LIGER']
 
 
 bm = Benchmarker(

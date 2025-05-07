@@ -1,6 +1,7 @@
 ## Reproducibility code for "Integrated single-cell atlas of human atherosclerotic plaques"
 
-This is the repository that includes the code used for the scRNA-seq human atherosclerotic plaque atlas (preprint: https://www.biorxiv.org/content/10.1101/2024.09.11.612431v1)
+This is the repository that includes the code used for the scRNA-seq human atherosclerotic plaque atlas (preprint: https://www.biorxiv.org/content/10.1101/2024.09.11.612431v1). 
+Because not all cells in the revisions were executed in these notebooks, some output figures need to be recomputed.
 
 ## How to run the code
 

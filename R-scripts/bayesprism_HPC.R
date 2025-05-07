@@ -10,8 +10,8 @@ library("openxlsx")
 library(zellkonverter)
 
 
-setwd("/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/bulk")
-output_dir = "cell_type_deconvolution/lars/sign/BigwithBashoreV1_level12_newDibothers"; dir.create(file.path(output_dir), showWarnings = FALSE)
+setwd("/lustre/groups/epigenereg01/workspace/users/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/bulk")
+output_dir = "cell_type_deconvolution/lars/sign/rev2_normalECs_lvl2"; dir.create(file.path(output_dir), showWarnings = FALSE)
 
 
 ###########################################################
@@ -21,7 +21,7 @@ output_dir = "cell_type_deconvolution/lars/sign/BigwithBashoreV1_level12_newDibo
 print("Reading in scdata...")
 # Rows: genes (ENSGID remove versioning with stringr::str_replace(colnames(bulk.count_matrix), "\\.[0-9]+", ""))
 # Column: cells
-sc.count_matrix = readH5AD('/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Big-atlas-uncorrected_counts-nootherlayers-corrected2-ensembleYES-noCITE-withlevel2-newDib+other.h5ad') # uncorrected counts new atlas based on level 1 with with bashore and lars/jessica + NEW DIB macrophages without c1q level 2 cell types: sign BigwithBashoreV1-newDibothers
+sc.count_matrix = readH5AD('/lustre/groups/epigenereg01/workspace/users/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/Plaque-atlas/Big-atlas-uncorrected_counts-nootherlayers-corrected2-ensembleYES-noCITE-withlevel2-newDib+other-revision2-withnormalEC.h5ad') # revision2 with normal ECs
 
 
 original_colData <- colData(sc.count_matrix)
@@ -35,7 +35,7 @@ transposed_counts <- as.matrix(t(counts))
 print("Reading in bulk..")
 
 #Lars
-bulk.count_matrix <- readRDS("/home/icb/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/bulk/Maegdefessel/gene_summarized_experiment.RDS")
+bulk.count_matrix <- readRDS("/lustre/groups/epigenereg01/workspace/users/korbinian.traeuble/projects/Roche/hpc-data-transfer/Roche_main/data/bulk/Maegdefessel/gene_summarized_experiment.RDS")
 rownames(bulk.count_matrix) <- stringr::str_replace(rownames(bulk.count_matrix), "\\.[0-9]+", "")
 bulk.count_matrix <- as.matrix(t(assays(bulk.count_matrix)$counts))
 

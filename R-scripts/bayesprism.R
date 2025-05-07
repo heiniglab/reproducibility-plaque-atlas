@@ -17,9 +17,9 @@ library(tidyr)
 bulk.count_attributes = readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/gene_summarized_experiment.RDS")
 # calculate those on cluster
 
-theta <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers/theta.rds")
-theta.cv <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers/theta.cv.rds")
-output_dir <- "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/BigwithBashoreV1_level2_newDibothers"
+theta <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/rev2_normalECs/theta.rds")
+theta.cv <- readRDS("/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/rev2_normalECs/theta.cv.rds")
+output_dir <- "/Users/korbinian.traeuble/PhD-local/projects/main_Roche/data/bulk/Maegdefessel/cell_type_deconvolution/sign/rev2_normalECs"
 ############################
 
 # Abundances
