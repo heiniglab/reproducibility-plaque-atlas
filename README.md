@@ -18,14 +18,14 @@ To execute the first notebook, 1_preprocessing.ipynb, the corresponding raw data
 | Jaiswal et al.  | carotid         | 5,554   | 2         | GSE179159        |
 | Dib et al.       | carotid         | 25,147  | 6         | GSE210152        |
 | Fernandez et al. | carotid         | 9,935   | 7         | GSE224273        |
-| Slysz et al.     | carotid         | 27,245  | 4         | GSE234077        |
+| Slysz et al.     | carotid         | 27,245  | 3         | GSE234077        |
 | Pauli et al.    | carotid         | 1,269   | 8         | GSE247238        |
 | Bashore et al.  | carotid         | 75,582  | 18        | GSE253904        |
 | Wirka et al.     | coronary        | 11,750  | 8         | GSE131778        |
 | Emoto et al.     | coronary        | 1,621   | 2         | GSE184073        |
 | Chowdhury et al. | coronary        | 22,543  | 12        | GSE196943        |
-| Slysz et al.    | femoral         | 35,371  | 9         | GSE234077        |
-| **Total**         |                 | **259,493** | **80** |                  |
+| Slysz et al.    | femoral         | 35,371  | 7         | GSE234077        |
+| **Total**         |                 | **259,493** | **79** |                  |
 
 Some of the scripts have a "HPC" suffix, which means that this script requires substantial amount of memory and is hence recommended to be ran on a cluster.
 
