@@ -31,9 +31,30 @@ Some of the scripts have a "HPC" suffix, which means that this script requires s
 
 ## Usefull links
 
-preprint: https://www.biorxiv.org/content/10.1101/2024.09.11.612431v1 \
+paper: https://www.nature.com/articles/s41467-025-63202-x \
 \
 The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. (is currently being updated to the new atlas version) \
 \
-Repo for automatic cell type annotation: https://github.com/kotr98/plaque-atlas-mapping
+Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
+## Citation
 
+If you use this resource, please cite our paper:
+
+Traeuble, K., Munz, M., Pauli, J. et al. Integrated single-cell atlas of human atherosclerotic plaques. Nat Commun 16, 8255 (2025). https://doi.org/10.1038/s41467-025-63202-x
+
+### BibTeX
+```bibtex
+@ARTICLE{Traeuble2025,
+  title     = "Integrated single-cell atlas of human atherosclerotic plaques",
+  author    = "Traeuble, Korbinian and Munz, Matthias and Pauli, Jessica and
+               Sachs, Nadja and Vafadarnejad, Eshan and Carrillo-Roa, Tania and
+               Maegdefessel, Lars and Kastner, Peter and Heinig, Matthias",
+  journal   = "Nat. Commun.",
+  publisher = "Nature Publishing Group",
+  volume    =  16,
+  number    =  1,
+  pages     = "1--16",
+  month     =  sep,
+  year      =  2025,
+  language  = "en"
+}
