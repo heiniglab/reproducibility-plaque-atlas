@@ -123,8 +123,13 @@ label_position <- max_value + (max_value * 0.25) # Adjust the multiplier as need
 p_values <- df.abund %>%
   group_by(cell_type) %>%
   summarise(p_value = t.test(clr_value ~ is_diseased)$p.value) %>%
-  mutate(label = ifelse(p_value < 0.05, paste0("p = ", format(p_value, digits = 2)), "ns"))
-
+  ungroup() %>%
+  mutate(
+    p_adj = p.adjust(p_value, method = "BH"),
+    label = ifelse(p_adj < 0.05,
+                   paste0("p = ", format(p_value, digits = 2)),
+                   "ns")
+  )
 
 # Adjust plot margins to make space for the p-value labels
 p <- p + theme(plot.margin = margin(r = 2, unit = "pt")) # Adjust the right margin as needed
