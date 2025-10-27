@@ -37,6 +37,17 @@ The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.czisc
 \
 Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
 
+
+## Changelog
+
+### 2025-10-27
+- **Duplicate cells identified:** During a recent CELLxGENE data audit, duplicated cells were found in the atlas caused by overlapping barcodes between certain samples.  
+  - `donor_id:9_Chowdhury` (230 cells) is fully contained within `donor_id:2_Wirka`.  
+  - `donor_id:8_Chowdhury` (295 cells) is fully contained within the combination of `donor_id:3_Wirka` and `donor_id:4_Wirka`.
+  - Of note, the Chowdhury dataset was sorted for T-cells.  
+- **Action:** The CELLxGENE submission was updated to remove `donor_id:9_Chowdhury` and `donor_id:8_Chowdhury`. 
+
+
 ## Citation
 
 If you use this resource, please cite our paper:
