@@ -33,7 +33,7 @@ Some of the scripts have a "HPC" suffix, which means that this script requires s
 
 paper: https://www.nature.com/articles/s41467-025-63202-x \
 \
-The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. (is currently being updated to the new atlas version) \
+The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. \
 \
 Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
 
