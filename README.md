@@ -3,6 +3,17 @@
 This is the repository that includes the code used for the scRNA-seq human atherosclerotic plaque atlas (https://www.nature.com/articles/s41467-025-63202-x). 
 Because not all cells in the revisions were executed in these notebooks, some output figures need to be recomputed.
 
+## Changelog
+### 2026-01-29
+- **Location of counts in CELLxGENE:** Due to several email requests, we want to clarify that the gene counts of the CELLxGENE object are at adata.raw.X.
+
+### 2025-10-27
+- **Duplicate cells identified:** During a recent CELLxGENE data audit, duplicated cells were found in the atlas caused by overlapping barcodes between certain samples.  
+  - `donor_id:9_Chowdhury` (230 cells) is fully contained within `donor_id:2_Wirka`.  
+  - `donor_id:8_Chowdhury` (295 cells) is fully contained within the combination of `donor_id:3_Wirka` and `donor_id:4_Wirka`.
+  - Of note, the Chowdhury dataset was sorted for T-cells.  
+- **Action:** The CELLxGENE submission was updated to remove `donor_id:9_Chowdhury` and `donor_id:8_Chowdhury`. 
+
 ## How to run the code
 
 We provide environment yml files for the python and R packages, required to run the notebooks/scripts. 
@@ -36,16 +47,6 @@ paper: https://www.nature.com/articles/s41467-025-63202-x \
 The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. \
 \
 Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
-
-
-## Changelog
-
-### 2025-10-27
-- **Duplicate cells identified:** During a recent CELLxGENE data audit, duplicated cells were found in the atlas caused by overlapping barcodes between certain samples.  
-  - `donor_id:9_Chowdhury` (230 cells) is fully contained within `donor_id:2_Wirka`.  
-  - `donor_id:8_Chowdhury` (295 cells) is fully contained within the combination of `donor_id:3_Wirka` and `donor_id:4_Wirka`.
-  - Of note, the Chowdhury dataset was sorted for T-cells.  
-- **Action:** The CELLxGENE submission was updated to remove `donor_id:9_Chowdhury` and `donor_id:8_Chowdhury`. 
 
 
 ## Citation
