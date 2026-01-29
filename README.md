@@ -57,17 +57,16 @@ Traeuble, K., Munz, M., Pauli, J. et al. Integrated single-cell atlas of human a
 
 ### BibTeX
 ```bibtex
-@ARTICLE{Traeuble2025,
-  title     = "Integrated single-cell atlas of human atherosclerotic plaques",
-  author    = "Traeuble, Korbinian and Munz, Matthias and Pauli, Jessica and
-               Sachs, Nadja and Vafadarnejad, Eshan and Carrillo-Roa, Tania and
-               Maegdefessel, Lars and Kastner, Peter and Heinig, Matthias",
-  journal   = "Nat. Commun.",
-  publisher = "Nature Publishing Group",
-  volume    =  16,
-  number    =  1,
-  pages     = "1--16",
-  month     =  sep,
-  year      =  2025,
-  language  = "en"
+@article{Traeuble2025,
+  title = {Integrated single-cell atlas of human atherosclerotic plaques},
+  volume = {16},
+  ISSN = {2041-1723},
+  url = {http://dx.doi.org/10.1038/s41467-025-63202-x},
+  DOI = {10.1038/s41467-025-63202-x},
+  number = {1},
+  journal = {Nature Communications},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Traeuble,  Korbinian and Munz,  Matthias and Pauli,  Jessica and Sachs,  Nadja and Vafadarnejad,  Eshan and Carrillo-Roa,  Tania and Maegdefessel,  Lars and Kastner,  Peter and Heinig,  Matthias},
+  year = {2025},
+  month = sep 
 }
