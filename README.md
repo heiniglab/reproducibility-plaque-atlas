@@ -3,6 +3,14 @@
 This is the repository that includes the code used for the scRNA-seq human atherosclerotic plaque atlas (https://www.nature.com/articles/s41467-025-63202-x). 
 Because not all cells in the revisions were executed in these notebooks, some output figures need to be recomputed.
 
+## Usefull links
+
+Paper: https://www.nature.com/articles/s41467-025-63202-x \
+\
+The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. \
+\
+Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
+
 ## Changelog
 ### 2026-01-29
 - **Location of counts in CELLxGENE:** Due to several email requests, we want to clarify that the gene counts of the CELLxGENE object are at adata.raw.X.
@@ -39,14 +47,6 @@ To execute the first notebook, 1_preprocessing.ipynb, the corresponding raw data
 | **Total**         |                 | **259,493** | **79** |                  |
 
 Some of the scripts have a "HPC" suffix, which means that this script requires substantial amount of memory and is hence recommended to be ran on a cluster.
-
-## Usefull links
-
-paper: https://www.nature.com/articles/s41467-025-63202-x \
-\
-The resulting atlas can also be downloaded on CELLxGENE: https://cellxgene.cziscience.com/collections/db70986c-7d91-49fe-a399-a4730be394ac. \
-\
-Repo for automatic cell type annotation: https://github.com/heiniglab/plaque-atlas-mapping
 
 
 ## Citation
